@@ -2,7 +2,7 @@ var board = [];
 var rows = 8;
 var cols = 8;
 
-var minesCount = 8;
+var minesCount = 1;
 var minesLocation = [];
 
 var tilesClicked = 0; 
@@ -156,7 +156,10 @@ function checkMine(r, c) {
 
     if (tilesClicked == rows * cols - minesCount) {
         document.getElementById("mines-count").innerText = "cleared";
-        gameOver = true
+        setTimeout(() => {
+            triggerVictory();
+        }, 300);
+        gameOver = true;
     }
 }
 
@@ -168,4 +171,31 @@ function checkTile(r, c) {
         return 1;
     }
     return 0;
+}
+
+function triggerVictory() {
+    const audio = document.getElementById("winSound");
+    audio.play();
+
+    const duration = 2 * 1000;
+    const end = Date.now() + duration;
+
+    (function frame() {
+        confetti({
+            particleCount: 5,
+            angle: 60,
+            spread: 55,
+            origin: { x: 0 }
+        });
+        confetti({
+            particleCount: 5,
+            angle: 120,
+            spread: 55,
+            origin: { x: 1 }
+        });
+
+        if (Date.now() < end) {
+            requestAnimationFrame(frame);
+        }
+    })();
 }
